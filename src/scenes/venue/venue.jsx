@@ -1,44 +1,90 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, ButtonGroup, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import Header from "../../components/Header";
+import VenueForm from "./addVenuePage";
 // import VenueForm from "./VenueForm"; // Import the VenueForm component
-
-
-
+import { useNavigate } from "react-router-dom";
 const Venue = () => {
   const columns = [
-    { field: "Venue_id", headerName: "ID" , headerClassName: "column-header"},
-    { field: "Venue_name", headerName: "Name", flex: 1 , headerClassName: "column-header"},
-    { field: "Venue_description", headerName: "Description", flex: 1, headerClassName: "column-header" },
-    { field: "Venue_contact", headerName: "Contact", flex: 1 , headerClassName: "column-header"},
-    { field: "Venue_address", headerName: "Address", flex: 1 , headerClassName: "column-header"},
-    { field: "Venue_amountPerDay", headerName: "Amount per Day", flex: 1 , headerClassName: "column-header"},
-    { field: "Venue_image", headerName: "Image", flex: 1 , headerClassName: "column-header"},
+    { field: "Venue_id", headerName: "ID", headerClassName: "column-header" },
     {
-    field: "actions",
-    headerName: "Actions",
-    flex: 1,
-    headerClassName: "column-header",
-    renderCell: (params) => (
-      <ButtonGroup>
-        <Button variant="outlined" color="primary" onClick={() => handleUpdate(params.row.Venue_id)}>
-          Update
-        </Button>
-        <Button variant="outlined" color="secondary" onClick={() => handleDelete(params.row.Venue_id)}>
-          Delete
-        </Button>
-      </ButtonGroup>
-    ),
+      field: "Venue_name",
+      headerName: "Name",
+      flex: 1,
+      headerClassName: "column-header",
     },
-
+    {
+      field: "Venue_description",
+      headerName: "Description",
+      flex: 1,
+      headerClassName: "column-header",
+    },
+    {
+      field: "Venue_contact",
+      headerName: "Contact",
+      flex: 1,
+      headerClassName: "column-header",
+    },
+    {
+      field: "Venue_address",
+      headerName: "Address",
+      flex: 1,
+      headerClassName: "column-header",
+    },
+    {
+      field: "Venue_amountPerDay",
+      headerName: "Amount per Day",
+      flex: 1,
+      headerClassName: "column-header",
+    },
+    {
+      field: "Venue_image",
+      headerName: "Image",
+      flex: 1,
+      headerClassName: "column-header",
+    },
+    {
+      field: "actions",
+      headerName: "Actions",
+      flex: 1,
+      headerClassName: "column-header",
+      renderCell: (params) => (
+        <ButtonGroup>
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => handleUpdate(params.row.Venue_id)}
+          >
+            Update
+          </Button>
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={() => handleDelete(params.row.Venue_id)}
+          >
+            Delete
+          </Button>
+        </ButtonGroup>
+      ),
+    },
   ];
 
   const [venueData, setVenueData] = useState([]);
   const [selectedVenueId, setSelectedVenueId] = useState(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editedVenueData, setEditedVenueData] = useState({});
-  
+  const [isAddingVenue, setIsAddingVenue] = useState(false); // Add this state
+  const navigate = useNavigate();
   useEffect(() => {
     // Fetch venue data from the backend API
     fetch("http://localhost:4000/venue/")
@@ -64,8 +110,6 @@ const Venue = () => {
   };
 
   const handleEditSave = () => {
-   
-
     // Make an API request to update the backend data
     fetch(`http://localhost:4000/venue/${selectedVenueId}`, {
       method: "PUT",
@@ -94,12 +138,13 @@ const Venue = () => {
       });
   };
 
-
   const handleDelete = (Venue_id) => {
     console.log("Delete clicked for user ID:", Venue_id);
     // Show a confirmation dialog and perform deletion
     // Show a confirmation dialog to confirm the deletion
-    const confirmDelete = window.confirm("Are you sure you want to delete this venue?");
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this venue?"
+    );
     if (confirmDelete) {
       // Send a DELETE request to the backend to delete the venue
       fetch(`http://localhost:4000/venue/${Venue_id}`, {
@@ -110,32 +155,57 @@ const Venue = () => {
           console.log("Venue deleted:", data);
 
           // Update the venueData state by removing the deleted venue
-          const updatedVenueData = venueData.filter((venue) => venue.Venue_id !== Venue_id);
+          const updatedVenueData = venueData.filter(
+            (venue) => venue.Venue_id !== Venue_id
+          );
           setVenueData(updatedVenueData);
         })
         .catch((error) => console.error("Error deleting venue:", error));
     }
+  };
 
+  const handleAddVenueClick = () => {
+    setIsAddingVenue(true);
+    navigate('/addvenue')
+  };
+
+  const handleSaveVenue = (newVenueData) => {
+    // Make API request to save the new venue data
+    // ... (your API request logic)
+
+    // Reset the form and close it after successful addition
+    setIsAddingVenue(false);
   };
 
   return (
-    <Box m="20px">
 
+    <Box m="20px">
       <Header title="List Of Venues" subtitle="Managing the Venues" />
+
       <Box m="40px 0 0 0" height="75vh">
+
         <DataGrid
           rows={venueData}
           columns={columns}
           getRowId={(row) => row.Venue_id}
           sx={{
-          "& .MuiDataGrid-cell": {
-            fontFamily: "Your Preferred Font",
-            fontSize: "18px",
-          },
-          // Add more styles as needed
-        }}
+            "& .MuiDataGrid-cell": {
+              fontFamily: "Your Preferred Font",
+              fontSize: "18px",
+            },
+            // Add more styles as needed
+          }}
         // ... (other DataGrid configurations)
+
+
         />
+        <Button variant="contained" color="primary" onClick={handleAddVenueClick}>
+          Add Venue
+        </Button>
+
+        {/* Display VenueForm when isAddingVenue is true */}
+        {isAddingVenue && <VenueForm onSave={handleSaveVenue} />}
+
       </Box>
       <Dialog open={isEditDialogOpen} onClose={handleEditDialogClose}>
         <DialogTitle>Edit Venue</DialogTitle>
@@ -145,18 +215,22 @@ const Venue = () => {
             label="Venue Name"
             value={editedVenueData.Venue_name || ""}
             onChange={(e) =>
-              setEditedVenueData({ ...editedVenueData, Venue_name: e.target.value })
+              setEditedVenueData({
+                ...editedVenueData,
+                Venue_name: e.target.value,
+              })
             }
             fullWidth
           />
-
-
 
           <TextField
             label="Venue Description"
             value={editedVenueData.Venue_description || ""}
             onChange={(e) =>
-              setEditedVenueData({ ...editedVenueData, Venue_description: e.target.value })
+              setEditedVenueData({
+                ...editedVenueData,
+                Venue_description: e.target.value,
+              })
             }
             fullWidth
           />
@@ -164,7 +238,10 @@ const Venue = () => {
             label="Venue Contact"
             value={editedVenueData.Venue_contact || ""}
             onChange={(e) =>
-              setEditedVenueData({ ...editedVenueData, Venue_contact: e.target.value })
+              setEditedVenueData({
+                ...editedVenueData,
+                Venue_contact: e.target.value,
+              })
             }
             fullWidth
           />
@@ -172,7 +249,10 @@ const Venue = () => {
             label="Venue Address"
             value={editedVenueData.Venue_address || ""}
             onChange={(e) =>
-              setEditedVenueData({ ...editedVenueData, Venue_address: e.target.value })
+              setEditedVenueData({
+                ...editedVenueData,
+                Venue_address: e.target.value,
+              })
             }
             fullWidth
           />
@@ -180,7 +260,10 @@ const Venue = () => {
             label="Venue Amount per Day"
             value={editedVenueData.Venue_amountPerDay || ""}
             onChange={(e) =>
-              setEditedVenueData({ ...editedVenueData, Venue_amountPerDay: e.target.value })
+              setEditedVenueData({
+                ...editedVenueData,
+                Venue_amountPerDay: e.target.value,
+              })
             }
             fullWidth
           />
@@ -188,7 +271,10 @@ const Venue = () => {
             label="Venue Image"
             value={editedVenueData.Venue_image || ""}
             onChange={(e) =>
-              setEditedVenueData({ ...editedVenueData, Venue_image: e.target.value })
+              setEditedVenueData({
+                ...editedVenueData,
+                Venue_image: e.target.value,
+              })
             }
             fullWidth
           />
@@ -204,7 +290,6 @@ const Venue = () => {
         </DialogActions>
       </Dialog>
     </Box>
-  
   );
 };
 

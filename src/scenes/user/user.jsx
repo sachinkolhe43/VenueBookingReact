@@ -11,22 +11,22 @@ const User = () => {
     { field: "User_pass", headerName: "Password", flex: 1, headerClassName: "column-header" },
     { field: "User_contact", headerName: "Contact", flex: 1, headerClassName: "column-header" },
     { field: "User_address", headerName: "Address", flex: 1, headerClassName: "column-header" },
-    {
-    field: "actions",
-    headerName: "Actions",
-    flex: 1,
-    headerClassName: "column-header",
-    renderCell: (params) => (
-      <ButtonGroup>
-        <Button variant="outlined" color="primary" onClick={() => handleUpdate(params.row.User_id)}>
-          Update
-        </Button>
-        <Button variant="outlined" color="secondary" onClick={() => handleDelete(params.row.User_id)}>
-          Delete
-        </Button>
-      </ButtonGroup>
-    ),
-    },
+    // {
+    // field: "actions",
+    // headerName: "Actions",
+    // flex: 1,
+    // headerClassName: "column-header",
+    // renderCell: (params) => (
+    //   <ButtonGroup>
+    //     <Button variant="outlined" color="primary" onClick={() => handleUpdate(params.row.User_id)}>
+    //       Update
+    //     </Button>
+    //     <Button variant="outlined" color="secondary" onClick={() => handleDelete(params.row.User_id)}>
+    //       Delete
+    //     </Button>
+    //   </ButtonGroup>
+    // ),
+    // },
   ];
 
   const [userData, setUserData] = useState([]);

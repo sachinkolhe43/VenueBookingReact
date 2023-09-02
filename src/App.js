@@ -10,6 +10,8 @@ import React from "react";
 import { BrowserRouter, Switch } from "react-router-dom";
 import Bookings from "./scenes/booking/booking";
 import User from "./scenes/user/user";
+import MaterialFormComponent from "./scenes/venue/addVenuePage";
+import Form from "./scenes/venue/addVenuePage";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -28,6 +30,9 @@ function App() {
               <Route path="/venue" element={<Venue />} />
               <Route path="/user" element={<User />} />
               <Route path="/booking" element={<Bookings/>} />
+              <Route path="/addvenue" element={<Form />} />
+              
+
             </Routes>
           </main>
         </div>
